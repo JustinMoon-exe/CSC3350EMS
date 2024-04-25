@@ -1,6 +1,8 @@
 package employeemanage;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Employee {
 
@@ -11,6 +13,7 @@ public class Employee {
     private String division;
     private double salary;
     private Date hireDate;
+    private List<PayStatement> payHistory = new ArrayList();
 
     // Constructors
 
@@ -27,6 +30,7 @@ public class Employee {
         this.salary = salary;
         this.hireDate = hireDate;
     }
+
 
     // Getters and Setters
 
@@ -86,7 +90,16 @@ public class Employee {
         this.hireDate = hireDate;
     }
 
+    public List<PayStatement> getPayHistory() {
+        return payHistory;
+    }
+
     // Additional methods (optional)
+
+    public void addPayStatement(PayStatement payStatement) 
+    {
+        payHistory.add(payStatement);
+    }
 
     @Override
     public String toString() {
