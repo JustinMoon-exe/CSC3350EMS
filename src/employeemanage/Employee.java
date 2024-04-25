@@ -7,7 +7,9 @@ import java.util.List;
 public class Employee {
 
     private int empId; // Unique identifier (consider auto-increment for database)
-    private String name;
+    private String fname;
+    private String lname;
+    private String email;
     private String SSN; // Consider encryption for sensitive data
     private String jobTitle;
     private String division;
@@ -21,10 +23,11 @@ public class Employee {
         // Default constructor (optional)
     }
 
-    public Employee(int empId, String name, String SSN, String jobTitle, String division, double salary, Date hireDate) {
+    public Employee(int empId, String fname, String lname, String email, String jobTitle, String division, double salary, Date hireDate) {
         this.empId = empId;
-        this.name = name;
-        this.SSN = SSN; // Consider encryption for security
+        this.fname = fname;
+        this.lname = lname;
+        this.email = email;
         this.jobTitle = jobTitle;
         this.division = division;
         this.salary = salary;
@@ -42,14 +45,7 @@ public class Employee {
         this.empId = empId;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
+  
     public String getSSN() {
         return SSN;
     }
@@ -89,6 +85,40 @@ public class Employee {
     public void setHireDate(Date hireDate) {
         this.hireDate = hireDate;
     }
+    
+    public void setFirstName(String fname) {
+    	this.fname = fname;
+    }
+    
+    public String getFirstName() {
+    	return fname;
+    }
+    
+    public void setLastName(String lname) {
+    	this.lname = lname;
+    }
+    
+    public String getLastName() {
+    	return lname;
+    }
+    
+    public void setName(String name) {
+    	
+    }
+    
+    public String getName() {
+    	return(fname + " " + lname);
+    }
+    
+    public void setEmail(String email) {
+    	this.email = email;
+    }
+    
+    public String getEmail() {
+    	return email;
+    }
+    
+
 
     public List<PayStatement> getPayHistory() {
         return payHistory;
@@ -105,8 +135,9 @@ public class Employee {
     public String toString() {
         return "Employee{" +
                 "empId=" + empId +
-                ", name='" + name + '\'' +
-                ", SSN='" + SSN + '\'' + // Consider masking for security
+                ", fname='" + fname + '\'' +
+                ", lname='" + lname + '\'' +
+                ", email='" + email + '\'' +
                 ", jobTitle='" + jobTitle + '\'' +
                 ", division='" + division + '\'' +
                 ", salary=" + salary +

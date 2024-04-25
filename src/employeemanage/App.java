@@ -18,63 +18,73 @@ public class App {
     private static final String PASSWORD = "victor1234$$";
     private static Scanner scanner = new Scanner(System.in);
     private static EmployeeDB employeeDB = new EmployeeDB(); // Use EmployeeDB class
+    
     private static SalaryAdjuster salaryAdjuster = new SalaryAdjuster(); // Use SalaryAdjuster class
+    private static PayrollStatementPrint payrollStatementPrint = new PayrollStatementPrint(employeeDB); // Create an instance of PayrollStatementPrint
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) {
         int choice;
 
         do {
             System.out.println("\nEmployee Management System");
             System.out.println("1. Add New Employee");
             System.out.println("2. Search Employees by Name");
-            System.out.println("3. Update Employee Data"); // Update
-	    System.out.println("4. Adjust Salaries");
-            System.out.println("5. Exit");
+            System.out.println("3. Update Employee Data");
+            System.out.println("4. Adjust Salaries");
+            System.out.println("5. Print Payroll");
+            System.out.println("6. Exit");
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
+            scanner.nextLine(); // Consume the newline character after reading the choice
 
-            switch (choice) {
-                case 1:
-                    addEmployee();
-                    break;
-                case 2:
-                    searchEmployees();
-                    break;
-                case 3:
-                    updateEmployee(); // Update
-                    break;
-		case 4:
-                    adjustSalary(); // Adjust
-                    break;
-                case 5:
-                    System.out.println("Exiting the system...");
-                    break;
-                default:
-                    System.out.println("Invalid choice!");
+            try {
+                switch (choice) {
+                    case 1:
+                        addEmployee();
+                        break;
+                    case 2:
+                        searchEmployees();
+                        break;
+                    case 3:
+                        updateEmployee();
+                        break;
+                    case 4:
+                        adjustSalary();
+                        break;
+                    case 5:
+                    	printEmployeePayrollStatement();
+                        break;
+                    case 6:
+                        System.out.println("Exiting the system...");
+                        break;
+                    default:
+                        System.out.println("Invalid choice!");
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-        } while (choice != 4);
+        } while (choice != 6);
 
         scanner.close();
     }
 
     private static void addEmployee() {
-    	int empID = 0;
-    	String empIdStr = getDataInput("Enter employee ID: ");
+        int empID = 0;
+        String empIdStr = getDataInput("Enter employee ID: ");
         while (empIdStr.isEmpty()) {
             System.out.println("Error: Employee ID cannot be empty. Please enter a valid ID.");
             empIdStr = getDataInput("Enter employee ID: ");
         }
         empID = Integer.parseInt(empIdStr);
-        String name = getDataInput("Enter employee name: ");
-        String SSN = getDataInput("Enter SSN: ");  // Consider security implications
-        String jobTitle = getDataInput("Enter job title: ");
-        String division = getDataInput("Enter division: ");
+        String firstName = getDataInput("Enter employee first name: ");
+        String lastName = getDataInput("Enter employee last name: ");
+        String email = getDataInput("Enter employee email: ");
+        String jobTitle = getDataInput("Enter job ID: ");
+        String Division = getDataInput("Enter Division: ");
         double salary = Double.parseDouble(getDataInput("Enter salary: "));
 
-
         try {
-            
-			Employee employee = new Employee(empID, name, SSN, jobTitle, division, salary, new java.sql.Date(new java.util.Date().getTime())); // Use current date
+            Employee employee = new Employee(empID, firstName, lastName, email, jobTitle, Division, salary, new java.sql.Date(new java.util.Date().getTime()));
             employeeDB.addEmployee(employee);
             System.out.println("Employee added successfully!");
         } catch (SQLException e) {
@@ -92,7 +102,7 @@ public class App {
             } else {
                 System.out.println("\nSearch Results:");
                 for (Employee employee : foundEmployees) {
-                    System.out.println(employee); // Utilize toString() method of Employee class (if implemented)
+                    System.out.println(employee); // Utilize toString() method of Employee class
                 }
             }
         } catch (SQLException e) {
@@ -100,7 +110,7 @@ public class App {
         }
     }
     
-    private static void updateEmployee() throws SQLException { // Update
+    private static void updateEmployee() throws SQLException {
         System.out.print("Enter employee ID to update: ");
         int empId = scanner.nextInt();
 
@@ -114,51 +124,70 @@ public class App {
         System.out.println(employee); // Utilize toString() method of Employee class (if implemented)
 
         System.out.println("\nWhat do you want to update?");
-        System.out.println("1. Name");
-        System.out.println("2. SSN");  // Consider security implications
-        System.out.println("3. Job Title");
-        System.out.println("4. Division");
-        System.out.println("5. Salary"); // Update salary option
+        System.out.println("1. First Name");
+        System.out.println("2. Last Name");
+        System.out.println("3. Email");
+        System.out.println("4. Job Title");
+        System.out.println("5. Salary");
         System.out.println("6. Cancel Update");
         System.out.print("Enter your choice: ");
         int updateChoice = scanner.nextInt();
+        scanner.nextLine(); // Consume newline character
 
         switch (updateChoice) {
             case 1:
-                updateEmployeeName(employee);
+                updateEmployeeFirstName(employee);
                 break;
-            case 2:
-                updateEmployeeSSN(employee); // Consider security implications
-                break;
-            case 3:
-                updateEmployeeJobTitle(employee);
-                break;
-            case 4:
-                updateEmployeeDivision(employee);
-                break;
-            case 5:
-                updateEmployeeSalary(employee); // Update salary implementation
-                break;
-            case 6:
-                System.out.println("Update cancelled.");
-                break;
-            default:
-                System.out.println("Invalid choice!");
+            // other cases...
+        }
+        // Debug statement to check if the employee object is updated
+        System.out.println("After updating employee:");
+        System.out.println(employee);
+    }
+
+
+    private static void updateEmployeeFirstName(Employee employee) {
+        System.out.println("Before getting input"); // Debug statement
+        String newFirstName = getDataInput("Enter new first name: ");
+        System.out.println("After getting input"); // Debug statement
+
+        employee.setFirstName(newFirstName);
+        try {
+            employeeDB.updateEmployee(employee);
+            System.out.println("Employee first name updated successfully!");
+        } catch (SQLException e) {
+            System.err.println("Error updating employee first name: " + e.getMessage());
         }
     }
 
-    private static void updateEmployeeName(Employee employee) {
-        String newName = getDataInput("Enter new name: ");
-        employee.setName(newName);
+
+
+
+    private static void updateEmployeeLastName(Employee employee) {
+        String newLastName = getDataInput("Enter new last name: ");
+        employee.setLastName(newLastName);
         try {
             employeeDB.updateEmployee(employee);
-            System.out.println("Employee name updated successfully!");
+            System.out.println("Employee last name updated successfully!");
         } catch (SQLException e) {
-            System.err.println("Error updating employee name: " + e.getMessage());
+            System.err.println("Error updating employee last name: " + e.getMessage());
         }
     }
+
+    private static void updateEmployeeEmail(Employee employee) {
+        String newEmail = getDataInput("Enter new email: ");
+        employee.setEmail(newEmail);
+        try {
+            employeeDB.updateEmployee(employee);
+            System.out.println("Employee email updated successfully!");
+        } catch (SQLException e) {
+            System.err.println("Error updating employee email: " + e.getMessage());
+        }
+    }
+    
     private static void updateEmployeeSalary(Employee employee) { // Update salary
         String salaryInput = getDataInput("Enter new salary: $");
+        System.out.println("Debug: Input salary string: " + salaryInput); // Debug statement
         double newSalary;
         try {
             newSalary = Double.parseDouble(salaryInput);
@@ -179,17 +208,20 @@ public class App {
             System.err.println("Error updating employee salary: " + e.getMessage());
         }
     }
+    
+    private static void printEmployeePayrollStatement() {
+        System.out.print("Enter employee ID to print payroll statement: ");
+        int empId = scanner.nextInt();
+        scanner.nextLine(); // Consume the newline character
 
-    private static void updateEmployeeSSN(Employee employee) { // Consider security implications
-        String newSSN = getDataInput("Enter new SSN: ");  // Consider security implications
-        employee.setSSN(newSSN);
         try {
-            employeeDB.updateEmployee(employee);
-            System.out.println("Employee SSN updated successfully!");
+            Employee employee = employeeDB.getEmployee(empId);
+            payrollStatementPrint.printPayrollStatement(employee);
         } catch (SQLException e) {
-            System.err.println("Error updating employee SSN: " + e.getMessage());
+            System.err.println("Error printing payroll statement: " + e.getMessage());
         }
     }
+
 
     private static void updateEmployeeJobTitle(Employee employee) {
         String newJobTitle = getDataInput("Enter new job title: ");
@@ -202,16 +234,7 @@ public class App {
         }
     }
 
-    private static void updateEmployeeDivision(Employee employee) {
-        String newDivision = getDataInput("Enter new division: ");
-        employee.setDivision(newDivision);
-        try {
-            employeeDB.updateEmployee(employee);
-            System.out.println("Employee division updated successfully!");
-        } catch (SQLException e) {
-            System.err.println("Error updating employee division: " + e.getMessage());
-        }
-    }
+
     
     private static String getDataInput(String prompt) {
         System.out.print(prompt);
@@ -226,7 +249,7 @@ public class App {
         double maxSalary = scanner.nextDouble();
 
 	System.out.print("Confirm? Y/N");
-	bool adjust = scanner.next().equalsIgnoreCase("Y);
+	boolean adjust = scanner.next().equalsIgnoreCase("Y");
 
 	if(adjust)
 	{
@@ -298,5 +321,6 @@ public class App {
 //          }
 //      }
 //  }
+    
 
 }

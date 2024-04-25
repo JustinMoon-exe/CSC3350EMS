@@ -28,7 +28,7 @@ public class PayStatement
 
     public void payDate(Date payDate) 
     {
-        payDate.hireDate = payDate;
+    	this.payDate = payDate;
     }
 
     public double getPayAmount() {
@@ -37,7 +37,7 @@ public class PayStatement
 
     public void payDate(double payAmount) 
     {
-        payDate.hireDate = payAmount;
+    	this.payAmount = payAmount;
     }
 
     // Additional methods (optional)

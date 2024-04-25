@@ -31,13 +31,14 @@ public class SalaryAdjuster {
         List<Employee> targetEmployees = new ArrayList<>();
         while (resultSet.next()) {
             targetEmployees.add(new Employee(
-                    resultSet.getInt("emp_id"),
-                    resultSet.getString("name"),
-                    resultSet.getString("SSN"), // Consider masking for security
-                    resultSet.getString("job_title"),
-                    resultSet.getString("division"),
-                    resultSet.getDouble("salary"),
-                    resultSet.getDate("hire_date")));
+            		resultSet.getInt("empid"),
+                    resultSet.getString("Fname"),
+                    resultSet.getString("Lname"),
+                    resultSet.getString("email"),
+                    resultSet.getString("jobTitle"),
+                    resultSet.getString("Division"),
+                    resultSet.getDouble("Salary"),
+                    resultSet.getDate("HireDate")));
         }
 
         for(Employee employee: targetEmployees)
