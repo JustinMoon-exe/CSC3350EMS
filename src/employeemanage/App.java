@@ -18,6 +18,7 @@ public class App {
     private static final String PASSWORD = "victor1234$$";
     private static Scanner scanner = new Scanner(System.in);
     private static EmployeeDB employeeDB = new EmployeeDB(); // Use EmployeeDB class
+    private static SalaryAdjuster salaryAdjuster = new SalaryAdjuster(); // Use SalaryAdjuster class
 
     public static void main(String[] args) throws SQLException {
         int choice;
@@ -27,7 +28,8 @@ public class App {
             System.out.println("1. Add New Employee");
             System.out.println("2. Search Employees by Name");
             System.out.println("3. Update Employee Data"); // Update
-            System.out.println("4. Exit");
+	    System.out.println("4. Adjust Salaries");
+            System.out.println("5. Exit");
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
 
@@ -41,7 +43,10 @@ public class App {
                 case 3:
                     updateEmployee(); // Update
                     break;
-                case 4:
+		case 4:
+                    adjustSalary(); // Adjust
+                    break;
+                case 5:
                     System.out.println("Exiting the system...");
                     break;
                 default:
@@ -211,6 +216,27 @@ public class App {
     private static String getDataInput(String prompt) {
         System.out.print(prompt);
         return scanner.nextLine();
+    }
+
+    private static void adjustSalary() throws SQLException { // Adjust
+        System.out.print("Enter the target percentage to adjust by: ");
+        double adjustPercentage = scanner.nextDouble();
+	System.out.print("Enter minimum and maximum salaries to target for adjustment: ");
+        double minSalary = scanner.nextDouble();
+        double maxSalary = scanner.nextDouble();
+
+	System.out.print("Confirm? Y/N");
+	bool adjust = scanner.next().equalsIgnoreCase("Y);
+
+	if(adjust)
+	{
+	    System.out.println("Adjusting salaries");
+	    salaryAdjuster.adjustSalaryByRange(minSalary, maxSalary, adjustPercentage);
+	}
+	else
+	{
+	    System.out.println("Cancelling adjustment");
+	}
     }
     		
 //  Connection connection = null;
