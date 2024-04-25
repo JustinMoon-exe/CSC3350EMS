@@ -34,11 +34,39 @@ public class ReportGenerator {
         connection.close();
     }
 
-    public void GenerateJobTitleAverageReport() throws SQLException 
+    public void GenerateJobTitleAverageReport(String jobTitle) throws SQLException 
     {
+	Connection connection = getConnection();
+        String sql = "SELECT AVG(Salary) AS Average_Salary" +
+              "FROM employees e " +
+              "INNER JOIN employee_job_titles ej ON e.empid = ej.empid " +
+              "INNER JOIN job_titles j ON ej.job_title_id = j.job_title_id " +
+              "WHERE j.job_title = ?";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setString(1, jobTitle);
+        ResultSet resultSet = statement.executeQuery();
+	while (resultSet.next()) {
+              double averageSalary = resultSet.getDouble("Average_Salary");
+              System.out.println("Average Salary: $" + averageSalary);
+        }
+        resultSet.close();
     }
 
-    public void GenerateDivisionAverageReport() throws SQLException 
+    public void GenerateDivisionAverageReport(String division) throws SQLException 
     {
+	Connection connection = getConnection();
+        String sql = "SELECT AVG(Salary) AS Average_Salary" +
+              "FROM employees e " +
+              "INNER JOIN employee_division ed ON e.empid = ed.empid " +
+              "INNER JOIN division d ON ed.div_ID = d.ID " +
+              "WHERE d.Name = ?";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setString(1, division);
+        ResultSet resultSet = statement.executeQuery();
+	while (resultSet.next()) {
+              double averageSalary = resultSet.getDouble("Average_Salary");
+              System.out.println("Average Salary: $" + averageSalary);
+        }
+        resultSet.close();
     }
 }
